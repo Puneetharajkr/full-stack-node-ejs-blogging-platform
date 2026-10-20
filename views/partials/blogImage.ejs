@@ -1,0 +1,19 @@
+<% if (blog.imagePath) { %>
+<button
+  class="blog-image-open"
+  type="button"
+  data-blog-image-open
+  data-full-image="<%= blog.imagePath %>"
+  data-image-alt="Full-size cover image for <%= blog.title %>"
+  aria-label="View full-size cover image for <%= blog.title %>"
+>
+  <img
+    class="blog-card-image"
+    src="<%= blog.imagePath %>"
+    alt="Blog Image"
+    loading="lazy"
+    decoding="async"
+  />
+  <span class="blog-image-open-hint" aria-hidden="true">View full image</span>
+</button>
+<% } %>

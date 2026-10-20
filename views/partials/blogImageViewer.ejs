@@ -1,0 +1,44 @@
+<dialog
+  class="blog-image-dialog"
+  data-blog-image-dialog
+  aria-label="Full-size blog image"
+>
+  <form method="dialog" class="blog-image-dialog-close-form">
+    <button
+      class="blog-image-dialog-close"
+      type="submit"
+      aria-label="Close image viewer"
+    >
+      &times;
+    </button>
+  </form>
+  <img
+    class="blog-image-dialog-content"
+    data-blog-image-dialog-content
+    alt=""
+  />
+</dialog>
+
+<script>
+  const imageDialog = document.querySelector("[data-blog-image-dialog]");
+  const imageDialogContent = imageDialog.querySelector(
+    "[data-blog-image-dialog-content]",
+  );
+
+  document.querySelectorAll("[data-blog-image-open]").forEach((button) => {
+    button.addEventListener("click", () => {
+      imageDialogContent.src = button.dataset.fullImage;
+      imageDialogContent.alt = button.dataset.imageAlt;
+      imageDialog.showModal();
+    });
+  });
+
+  imageDialog.addEventListener("click", (event) => {
+    if (event.target === imageDialog) imageDialog.close();
+  });
+
+  imageDialog.addEventListener("close", () => {
+    imageDialogContent.removeAttribute("src");
+    imageDialogContent.alt = "";
+  });
+</script>

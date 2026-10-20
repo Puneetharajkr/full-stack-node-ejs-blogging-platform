@@ -1,0 +1,21 @@
+<div class="top-bar">
+  <div class="tabs">
+    <div><a class="tab" href="/api/home">Home</a></div>
+    <% if (isAuthenticated) { %>
+    <div><a class="tab" href="/api/myBlogs">My Blogs</a></div>
+    <div><a class="tab" href="/api/allUsers">All Users</a></div>
+    <% } %>
+  </div>
+
+  <div class="logout">
+    <% if (isAuthenticated) { %>
+    <form method="POST" action="/api/logout">
+      <button class="logout-button" id="logoutButton" type="submit">
+        Logout
+      </button>
+    </form>
+    <% } else { %>
+    <a href="/api/login">Login</a>
+    <% } %>
+  </div>
+</div>

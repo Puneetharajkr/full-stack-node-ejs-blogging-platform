@@ -1,0 +1,43 @@
+<script>
+  const blogBodies = document.querySelectorAll("[data-blog-body]");
+
+  const updateReadMoreButton = (blogBody) => {
+    const copy = blogBody.querySelector(".blog-body-copy");
+    const button = blogBody.querySelector(".blog-read-more");
+
+    if (button.getAttribute("aria-expanded") === "true") return;
+
+    copy.classList.add("blog-body-copy-collapsed");
+    const hasMoreContent = copy.scrollHeight > copy.clientHeight;
+    button.hidden = !hasMoreContent;
+
+    if (!hasMoreContent) {
+      copy.classList.remove("blog-body-copy-collapsed");
+    }
+  };
+
+  blogBodies.forEach((blogBody) => {
+    const copy = blogBody.querySelector(".blog-body-copy");
+    const button = blogBody.querySelector(".blog-read-more");
+
+    updateReadMoreButton(blogBody);
+
+    button.addEventListener("click", () => {
+      const isExpanded = button.getAttribute("aria-expanded") === "true";
+
+      button.setAttribute("aria-expanded", String(!isExpanded));
+      button.textContent = isExpanded ? "Read more" : "Show less";
+
+      if (isExpanded) {
+        updateReadMoreButton(blogBody);
+      } else {
+        copy.classList.remove("blog-body-copy-collapsed");
+        button.hidden = false;
+      }
+    });
+  });
+
+  window.addEventListener("resize", () => {
+    blogBodies.forEach(updateReadMoreButton);
+  });
+</script>

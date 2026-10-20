@@ -1,0 +1,107 @@
+<html lang="en">
+  <head>
+    <title>My Blogs</title>
+    <%- include('./partials/style.ejs') -%>
+  </head>
+
+  <body>
+    <%- include('./partials/topBar.ejs') -%>
+    <main class="blogs-page">
+      <header class="blogs-header">
+        <div>
+          <p class="blogs-eyebrow">Your writing space</p>
+          <h1 class="blogs-title">My blogs</h1>
+          <p class="blogs-subtitle">Your stories, all in one place.</p>
+        </div>
+        <div class="blogs-header-actions">
+          <a class="blog-add-button" href="/api/addBlog"
+            >Write a blog <span aria-hidden="true">+</span></a
+          >
+          <% if (blogs.length > 0 && !loadError) { %>
+          <form
+            class="blog-delete-all-form"
+            action="/api/myBlogs/delete-all"
+            method="POST"
+            onsubmit="
+              return confirm('Delete all your blogs? This cannot be undone.');
+            "
+          >
+            <button class="blog-delete-all-button" type="submit">
+              Delete all
+            </button>
+          </form>
+          <% } %>
+        </div>
+      </header>
+
+      <% if (notice) { %>
+      <p
+        class="blogs-notice <%= notice.type === 'error' ? 'blogs-notice-error' : '' %>"
+        role="<%= notice.type === 'error' ? 'alert' : 'status' %>"
+      >
+        <%= notice.text %>
+      </p>
+      <% } %>
+
+      <% if (loadError) { %>
+      <section class="blogs-empty-state" role="alert">
+        <h2>Blogs unavailable</h2>
+        <p><%= loadError %></p>
+      </section>
+      <% } else if (blogs.length > 0) { %>
+      <section class="blog-list" aria-label="Your blogs">
+        <% blogs.forEach((blog)=> { %>
+        <article class="blog-card">
+          <div
+            class="blog-card-layout <%= blog.imagePath ? 'blog-card-layout-with-image' : '' %>"
+          >
+            <%- include('./partials/blogImage.ejs', { blog }) -%>
+            <div class="blog-card-content">
+              <header class="blog-card-header">
+                <h2 class="blog-card-title"><%= blog.title %></h2>
+                <time
+                  class="blog-date"
+                  datetime="<%= new Date(blog.createdAt).toISOString() %>"
+                >
+                  <%= new Date(blog.createdAt).toLocaleDateString("en-US", { month:
+              "short" , day: "numeric" , year: "numeric" }) %>
+                </time>
+              </header>
+              <%- include('./partials/blogBody.ejs', { blog }) -%>
+              <footer class="blog-card-actions">
+                <a class="blog-edit-link" href="/api/blogs/<%= blog._id %>/edit"
+                  >Edit</a
+                >
+                <form
+                  class="blog-delete-form"
+                  action="/api/blogs/<%= blog._id %>/delete"
+                  method="POST"
+                  onsubmit="
+                    return confirm('Delete this blog? This cannot be undone.');
+                  "
+                >
+                  <button class="blog-delete-button" type="submit">
+                    Delete
+                  </button>
+                </form>
+              </footer>
+            </div>
+          </div>
+        </article>
+        <% }); %>
+      </section>
+      <% } else { %>
+      <section class="blogs-empty-state">
+        <span class="empty-mark" aria-hidden="true">+</span>
+        <h2>Your first story starts here</h2>
+        <p>You haven't published a blog yet. Create one when you're ready.</p>
+        <a class="blog-empty-link" href="/api/addBlog"
+          >Create your first blog</a
+        >
+      </section>
+      <% } %>
+    </main>
+    <%- include('./partials/blogImageViewer.ejs') -%>
+    <%- include('./partials/blogReadMoreScript.ejs') -%>
+  </body>
+</html>

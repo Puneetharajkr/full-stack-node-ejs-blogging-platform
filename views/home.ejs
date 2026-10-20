@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Community Blogs</title>
+    <%- include('./partials/style.ejs') -%>
+  </head>
+  <body>
+    <%- include('./partials/topBar.ejs') -%>
+    <main class="blogs-page home-blogs-page">
+      <header class="blogs-header home-blogs-header">
+        <div>
+          <p class="blogs-eyebrow">Community writing</p>
+          <h1 class="blogs-title">Explore blogs</h1>
+          <p class="blogs-subtitle">Stories and ideas shared by everyone.</p>
+        </div>
+        <form class="home-sort-form" action="/api/home" method="GET">
+          <label for="blog-sort">Sort by</label>
+          <select id="blog-sort" name="sort">
+            <option value="newest" <%= sortOrder === "newest" ? "selected" : "" %>>Newest first</option>
+            <option value="oldest" <%= sortOrder === "oldest" ? "selected" : "" %>>Oldest first</option>
+          </select>
+          <button type="submit">Apply</button>
+        </form>
+      </header>
+
+      <% if (loadError) { %>
+      <section class="blogs-empty-state" role="alert">
+        <h2>Blogs are unavailable</h2>
+        <p><%= loadError %></p>
+        <a class="blog-empty-link" href="/api/home">Try again</a>
+      </section>
+      <% } else if (blogsWithRespectiveAuthor.length > 0) { %>
+      <p class="home-results-count" aria-live="polite">
+        Showing <%= firstBlogNumber %>-<%= lastBlogNumber %> of <%= totalBlogs %> blogs
+      </p>
+      <section class="blog-list" aria-label="All community blogs">
+        <% blogsWithRespectiveAuthor.forEach((blog) => { %>
+        <article class="blog-card">
+          <div class="blog-card-layout <%= blog.imagePath ? 'blog-card-layout-with-image' : '' %>">
+            <%- include('./partials/blogImage.ejs', { blog }) -%>
+            <div class="blog-card-content">
+          <header class="blog-card-header">
+            <h2 class="blog-card-title"><%= blog.title %></h2>
+            <time
+              class="blog-date"
+              datetime="<%= new Date(blog.createdAt).toISOString() %>"
+            >
+              <%= new Date(blog.createdAt).toLocaleDateString("en-US", { month:
+              "short", day: "numeric", year: "numeric" }) %>
+            </time>
+          </header>
+          <% if (blog.author) { %>
+          <a
+            class="blog-author-link"
+            href="/api/users/<%= blog.author._id %>"
+            aria-label="View <%= blog.author.name %>'s profile"
+          >
+            <span class="blog-author-avatar" aria-hidden="true"><%= blog.author.name.trim().charAt(0).toUpperCase() || "A" %></span>
+            <span class="blog-author-details">
+              <strong><%= blog.author.name %></strong>
+              <span>Member since <%= new Date(blog.author.createdAt).toLocaleDateString("en-US", { month: "short", year: "numeric" }) %></span>
+            </span>
+          </a>
+          <% } else { %>
+          <p class="blog-author-unavailable">Author profile unavailable</p>
+          <% } %>
+          <%- include('./partials/blogBody.ejs', { blog }) -%>
+            </div>
+          </div>
+        </article>
+        <% }); %>
+      </section>
+
+      <% if (totalPages > 1) { %>
+      <nav class="blog-pagination" aria-label="Blog pages">
+        <% if (currentPage > 1) { %>
+        <a href="/api/home?page=<%= currentPage - 1 %>&sort=<%= sortOrder %>">
+          Previous
+        </a>
+        <% } else { %>
+        <span class="pagination-disabled" aria-disabled="true">Previous</span>
+        <% } %>
+        <span class="pagination-current">Page <%= currentPage %> of <%= totalPages %></span>
+        <% if (currentPage < totalPages) { %>
+        <a href="/api/home?page=<%= currentPage + 1 %>&sort=<%= sortOrder %>">
+          Next
+        </a>
+        <% } else { %>
+        <span class="pagination-disabled" aria-disabled="true">Next</span>
+        <% } %>
+      </nav>
+      <% } %>
+      <% } else { %>
+      <section class="blogs-empty-state">
+        <span class="empty-mark" aria-hidden="true">+</span>
+        <h2>No blogs have been published yet</h2>
+        <p>When someone shares a story, it will appear here.</p>
+        <% if (isAuthenticated) { %>
+        <a class="blog-empty-link" href="/api/addBlog">Write the first blog</a>
+        <% } else { %>
+        <a class="blog-empty-link" href="/api/login">Sign in to write</a>
+        <% } %>
+      </section>
+      <% } %>
+    </main>
+    <%- include('./partials/blogImageViewer.ejs') -%>
+    <%- include('./partials/blogReadMoreScript.ejs') -%>
+  </body>
+</html>

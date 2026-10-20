@@ -1,0 +1,42 @@
+<html>
+  <head>
+    <title>Login</title>
+    <%- include('./partials/style.ejs') -%>
+  </head>
+  <body>
+    <div class="wrapper">
+      <h2>Login</h2>
+      <br /><br />
+      <form method="POST" action="/api/login">
+        <!-- the main use of label is to provide a text description for an input element -->
+        <label for="email">Email:</label><br />
+        <input
+          type="email"
+          id="email"
+          name="email"
+          required
+          placeholder="Enter Your Email"
+        />
+        <br />
+        <br />
+        <label for="password">Password:</label><br />
+        <input
+          type="password"
+          id="password"
+          name="password"
+          required
+          placeholder="Enter Your Password"
+        />
+        <br />
+        <br />
+        <button type="submit" value="submit">Login</button>
+      </form>
+      <% if(message===undefined || message===null || message==="") { %>
+      <% } else { %>
+      <p><%= message %></p>
+      <% } %>
+      <hr />
+      <a href="/api/signup">Don't have an account? Signup here</a>
+    </div>
+  </body>
+</html>

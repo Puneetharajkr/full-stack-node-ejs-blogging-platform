@@ -1,0 +1,61 @@
+<html lang="en">
+  <head>
+    <title>All Users</title>
+    <%- include('./partials/style.ejs') -%>
+  </head>
+
+  <body>
+    <%- include('./partials/topBar.ejs') -%>
+    <main class="all-users-page">
+      <header class="all-users-header">
+        <div>
+          <p class="all-users-eyebrow">Community directory</p>
+          <h1 class="all-users-heading">All users</h1>
+        </div>
+        <span class="all-users-count">
+          <%= users.length %> <%= users.length===1 ? "member" : "members" %>
+        </span>
+      </header>
+
+      <% if (users.length) { %>
+      <div class="users-table-frame">
+        <table class="users-table">
+          <thead>
+            <tr>
+              <th scope="col">Member</th>
+              <th scope="col">Email address</th>
+              <th scope="col">Joined</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% users.forEach((user)=> { %>
+            <tr>
+              <td>
+                <div class="user-identity">
+                  <span class="user-avatar" aria-hidden="true">
+                    <%= user.name.charAt(0).toUpperCase() %>
+                  </span>
+                  <span class="user-name"> <%= user.name %> </span>
+                </div>
+              </td>
+              <td class="user-email"><%= user.email %></td>
+              <td class="user-joined">
+                <%= user.createdAt ? new
+                Date(user.createdAt).toLocaleDateString("en-US", { month:
+                "short" , day: "numeric" , year: "numeric" }) : "N/A" %>
+              </td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+      <% } else { %>
+      <div class="users-empty-state">
+        <span class="empty-mark" aria-hidden="true">+</span>
+        <h2>No members yet</h2>
+        <p>Registered users will appear here.</p>
+      </div>
+      <% } %>
+    </main>
+  </body>
+</html>
