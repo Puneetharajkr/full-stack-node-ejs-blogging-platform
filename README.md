@@ -1,4 +1,4 @@
-# Acciojob Backend Blogging
+# Node.js Backend Blogging Project with .ejs(view engine) for server rendered UI/HTML Templates - for frontend interaction
 
 A server-rendered blogging application built with Node.js, Express, MongoDB, and EJS. Users can publish and manage blog posts, upload optional cover images, browse posts from all authors, and view public author profiles.
 
